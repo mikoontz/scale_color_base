@@ -4,7 +4,7 @@
 ### Email: mikoontz@gmail.com
 ###
 ### Date Created: 20150922
-### Last Modified: 20150922
+### Last Modified: 20151017
 ###
 ### Intention: Demonstrate how to map values from a vector to a custom color ramp
 
@@ -17,7 +17,7 @@ scale_color_base <- function(value, colors=c("black", "white"), na.rm=FALSE, alp
   color_fnc <- colorRamp(colors=colors)
 
   # Define the plot colors by calling the rgb() function. Divide the 3-column matrix result of color.fnc by 255 such that values remain between 0 and 1.
-  plot_colors <- rgb(color_fnc(recast_n)/255, alpha=alpha)
+  plot_colors <- rgb(color_fnc(recast_value)/255, alpha=alpha)
   
   return (plot_colors)
 }
