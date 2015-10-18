@@ -8,10 +8,10 @@
 ###
 ### Intention: Convenient wrapper function to make a color ramp in base R. Takes a vector of values, a character vector of colors to map to, an optional new numeric range to map to (useful for fixing a numeric range to make two separate vectors comparable), an optional na.rm, and a transparency option.
 
-scale_color_base <- function(value, colors=c("black", "white"), range=range(value, na.rm=TRUE), na.rm=FALSE, alpha=1)
+scale_color_base <- function(value, colors=c("black", "white"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1)
 {
 
-    recast_value <- (value - range[1]) / (diff(range))
+    recast_value <- (value - mapToRange[1]) / (diff(mapToRange))
     recast_value[recast_value < 0] <- 0
     recast_value[recast_value > 1] <- 1
 
@@ -46,7 +46,26 @@ plot(n, col=scale_color_base(n, colors=c("blue", "purple", "red")), pch=19)
 
 # Fix the numeric range to map the values to. Useful for comparing two vectors with the same color palette.
 par(mfrow=c(1,2))
-n <- 30:40
-plot(n, col=scale_color_base(n, colors=c("blue",  "red"), range=c(20, 40)), pch=19)
-n2 <- 20:30
-plot(n2, col=scale_color_base(n2, colors=c("blue", "red"), range=c(20, 40)), pch=19)
+x <- 1:50
+y <- seq(from=1, to=2, by=0.05)
+xy <- expand.grid(x, y)
+names(xy) <- c("x", "y")
+
+plot(x=xy$x, y=xy$y, pch=19)
+
+# Use the scale_color_base() function to map to the range of the x*y values
+plot(x=xy$x, y=xy$y, pch=19, col=scale_color_base((xy$y), colors=c("blue", "red")))
+
+# New variable y2 is 0.5 greater (50% of original range) than y. Mapping to its range will show the exact same plot as when the range was 1 to 2 as when the range is 1.5 to 2.5:
+xy$y2 <- xy$y + 0.5
+plot(x=xy$x, y=xy$y2, pch=19, col=scale_color_base((xy$y2), colors=c("blue", "red")))
+
+# But if we want to compare the two ranges side by side, we want the color palette to reflect that the second range is greater than the first. So we can use the mapToRange to fix the range that we want to map the values of each vector to.
+par(mfrow=c(1,2))
+# The range we want to map to is the min and max of the WHOLE range of the data, including both vectors.
+new_range <- range(c(xy$y, xy$y2))
+new_range
+
+plot(x=xy$x, y=xy$y, pch=19, col=scale_color_base((xy$y), colors=c("blue", "red"), mapToRange=new_range))
+
+plot(x=xy$x, y=xy$y2, pch=19, col=scale_color_base((xy$y2), colors=c("blue", "red"), mapToRange=new_range))
