@@ -29,10 +29,10 @@ scale_color_base <- function(value, colors=c("black", "white"), na.rm=FALSE, map
     recast_value[recast_value > 1] <- 1
 
     # Use the colorRamp function to create a function that will parse values into a 3-column matrix of rgb fields. Specify the range that the colors should span (low to high)
-  color_fnc <- colorRamp(colors=colors)
+    color_fnc <- colorRamp(colors=colors)
 
-  # Define the plot colors by calling the rgb() function. Divide the 3-column matrix result of color.fnc by 255 such that values remain between 0 and 1.
-  plot_colors <- rgb(color_fnc(recast_value)/255, alpha=alpha)
+    # Define the plot colors by calling the rgb() function. Divide the 3-column matrix result of color.fnc by 255 such that values remain between 0 and 1.
+    plot_colors <- rgb(color_fnc(recast_value)/255, alpha=alpha)
   
-  return (plot_colors)
+    return (plot_colors)
 }
