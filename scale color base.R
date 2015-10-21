@@ -14,14 +14,14 @@
 # Arguments 
 #   value is a vector of numeric values
 
-#   colors is a vector of colors that gets passed to colorRamp for interpolation. Can be a character vector of color names, a character vector of hex values, or numeric vector of positive integers. Lower values map to the first elements of the vector, higher values map to the last elements of the vector. Default is palette is black to white. 
+#   colors is a vector of colors that gets passed to colorRamp for interpolation. Can be a character vector of color names, a character vector of hex values, or numeric vector of positive integers. Lower values map to the first elements of the vector, higher values map to the last elements of the vector. Default is palette is white to black. 
 
 #   na.rm gets passed to the range function via the mapToRange argument. Using na.rm=TRUE is required if you want the function to ignore NAs and map to non-NA values. Default is FALSE.
 
 #   mapToRange is a 2-element numeric vector representing the minimum and maximum (in that order) fixed numeric range to map the values to.  Passing the result of any call to range() would be sufficient. Example: range(c(vector1, vector2)) gets the overall range for both vectors. The default is the vector returned by calling the range() function on the supplied value= argument.
 #   alpha is a transparency option. Useful when lots of points are being plotted. Default is 1 (totally opaque).
 
-scale_color_base <- function(value, colors=c("black", "white"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1)
+scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1)
 {
     # Recasting subtracts the minimum from all elements of the value vector and divides by the maximum of the frame-shifed vector. Use na.rm=TRUE if there are NAs. The result is a vector with a length of length(value) of 0's and 1's. Values below the minimum value get a 0 and values above the maximum value get a 1.
     recast_value <- (value - mapToRange[1]) / (diff(mapToRange))

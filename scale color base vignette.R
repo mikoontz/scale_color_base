@@ -8,7 +8,7 @@
 ###
 ### Intention: Example uses of convenience function for base R that maps values to a continuous palette.
 
-scale_color_base <- function(value, colors=c("black", "white"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1)
+scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1)
 {
   
   # Recasting subtracts the minimum from all elements of the value vector and divides by the maximum of the frame-shifed vector. Use na.rm=TRUE if there are NAs. The result is a vector with a length of length(value) of 0's and 1's. Values below the minimum value get a 0 and values above the maximum value get a 1.
@@ -33,7 +33,7 @@ set.seed(0727)
 # Vector to that we want mapped to a color palette
 n <- runif(20, min=-20, max=20)
 
-# Default is black to white
+# Default is white to black
 plot(n, col=scale_color_base(n), pch=19)
 
 # Colors can be set using the colors= argument
