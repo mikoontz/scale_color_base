@@ -4,7 +4,7 @@
 ### Email: mikoontz@gmail.com
 ###
 ### Date Created: 20150922
-### Last Modified: 20151018
+### Last Modified: 20151110
 ###
 ### Intention: Convenient wrapper function to make a color ramp in base R. Takes a vector of values, a character vector of colors to map to, an optional new numeric range to map to (useful for fixing a numeric range to make two separate vectors comparable), an optional na.rm, and a transparency option.
 

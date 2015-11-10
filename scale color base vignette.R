@@ -4,7 +4,7 @@
 ### Email: mikoontz@gmail.com
 ###
 ### Date Created: 20151018
-### Last Modified: 20151018
+### Last Modified: 20151110
 ###
 ### Intention: Example uses of convenience function for base R that maps values to a continuous palette.
 
