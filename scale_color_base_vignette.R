@@ -32,7 +32,7 @@ scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, map
     stop("There are NAs in your vector. Using na.rm=TRUE will remove them for the mapping calculations, but add them back in in the final vector. Try that.")
   
   # Recasting subtracts the minimum from all elements of the value vector and divides by the maximum of the frame-shifed vector. Use na.rm=TRUE if there are NAs. The result is a vector with a length of length(value) of 0's and 1's. Values below the minimum value get a 0 and values above the maximum value get a 1.
-  recast_value <- (value[-which(is.na(value))] - mapToRange[1]) / (diff(mapToRange))
+  recast_value <- (value[!is.na(value)] - mapToRange[1]) / (diff(mapToRange))
   recast_value[recast_value < 0] <- 0
   recast_value[recast_value > 1] <- 1
   
@@ -43,7 +43,7 @@ scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, map
   plot_colors <- rep("NA", length(value))
   
   # Define the plot colors by calling the rgb() function. Divide the 3-column matrix result of color.fnc by 255 such that values remain between 0 and 1. Refill the storage vector only in the places where the value vector wasn't an NA.
-  plot_colors[-which(is.na(value))] <- rgb(color_fnc(recast_value)/255, alpha=alpha)
+  plot_colors[!is.na(value)] <- rgb(color_fnc(recast_value)/255, alpha=alpha)
   
   return (plot_colors)
 }
