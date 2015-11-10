@@ -88,8 +88,12 @@ plot(x, y, pch=19, col=scale_color_base(x, colors=c("blue", "green", "red"), na.
 #-------
 
 # Adjust transparency when there are a lot of points
-
 x <- 1:100
 y <- 1:100
 xy <- expand.grid(x=x, y=y)
-plot(xy$x, xy$y, pch=19, col=scale_color_base(1:10000))
+value <- rnorm(nrow(xy)) * xy$x
+plot(xy$x, xy$y, pch=19, col=scale_color_base(value, alpha=0.25, colors=c("blue", "red")))
+
+#-------
+# End alpha case
+#-------
