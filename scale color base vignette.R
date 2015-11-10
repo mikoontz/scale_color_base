@@ -8,6 +8,23 @@
 ###
 ### Intention: Example uses of convenience function for base R that maps values to a continuous palette.
 
+### Function description: scale_color_base() is a convenient wrapper function to make a color ramp in base R. Takes a vector of values, a character vector of colors to map to, an optional new numeric range to map to (useful for fixing a numeric range to make two separate vectors comparable), an optional na.rm, and a transparency option.
+
+# Returns
+#   a character value of hex color values with a length equal to the length of value where each color value represents the mapping of each value to a continuous color palette.
+
+# Arguments 
+#   value is a vector of numeric values
+
+#   colors is a vector of colors that gets passed to colorRamp for interpolation. Can be a character vector of color names, a character vector of hex values, or numeric vector of positive integers. Lower values map to the first elements of the vector, higher values map to the last elements of the vector. Default is palette is white to black. 
+
+#   na.rm gets passed to the range function via the mapToRange argument. Using na.rm=TRUE is required if you want the function to ignore NAs and map to non-NA values. Default is FALSE.
+
+#   mapToRange is a 2-element numeric vector representing the minimum and maximum (in that order) fixed numeric range to map the values to.  Passing the result of any call to range() would be sufficient. Example: range(c(vector1, vector2)) gets the overall range for both vectors. The default is the vector returned by calling the range() function on the supplied value= argument.
+
+#   alpha is a transparency option. Useful when lots of points are being plotted. Default is 1 (totally opaque).
+
+
 scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1)
 {
   # Check whether there are NAs in the value vector and the user did NOT specify to deal with them. Error results if both of these are true
