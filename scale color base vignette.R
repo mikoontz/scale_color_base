@@ -10,17 +10,23 @@
 
 scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1)
 {
+  # Check whether there are NAs in the value vector and the user did NOT specify to deal with them. Error results if both of these are true
+  if (na.rm==FALSE & any(is.na(value)))
+    stop("There are NAs in your vector. Using na.rm=TRUE will remove them for the mapping calculations, but add them back in in the final vector. Try that.")
   
   # Recasting subtracts the minimum from all elements of the value vector and divides by the maximum of the frame-shifed vector. Use na.rm=TRUE if there are NAs. The result is a vector with a length of length(value) of 0's and 1's. Values below the minimum value get a 0 and values above the maximum value get a 1.
-  recast_value <- (value - mapToRange[1]) / (diff(mapToRange))
+  recast_value <- (value[-which(is.na(value))] - mapToRange[1]) / (diff(mapToRange))
   recast_value[recast_value < 0] <- 0
   recast_value[recast_value > 1] <- 1
   
   # Use the colorRamp function to create a function that will parse values into a 3-column matrix of rgb fields. Specify the range that the colors should span (low to high)
   color_fnc <- colorRamp(colors=colors)
   
-  # Define the plot colors by calling the rgb() function. Divide the 3-column matrix result of color.fnc by 255 such that values remain between 0 and 1.
-  plot_colors <- rgb(color_fnc(recast_value)/255, alpha=alpha)
+  # Set up storage vector of plot colors starting with all NAs. The non-NA colors will be put into their appropriate position in the vector  
+  plot_colors <- rep("NA", length(value))
+  
+  # Define the plot colors by calling the rgb() function. Divide the 3-column matrix result of color.fnc by 255 such that values remain between 0 and 1. Refill the storage vector only in the places where the value vector wasn't an NA.
+  plot_colors[-which(is.na(value))] <- rgb(color_fnc(recast_value)/255, alpha=alpha)
   
   return (plot_colors)
 }
