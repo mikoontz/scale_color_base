@@ -5,7 +5,7 @@
 ###
 ### Date Created: 20150922
 
-scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1)
+scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1, printRecast=FALSE)
 {
     if (na.rm==FALSE & any(is.na(value)))
       stop("There are NAs in your vector. Using na.rm=TRUE will remove them for the mapping calculations, but add them back in in the final vector. Try that.")
@@ -19,5 +19,9 @@ scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, map
 
     plot_colors[!is.na(value)] <- rgb(color_fnc(recast_value)/255, alpha=alpha)
   
+    if (printRecast) {
+      print(recast_value)
+    }
+    
     return (plot_colors)
 }

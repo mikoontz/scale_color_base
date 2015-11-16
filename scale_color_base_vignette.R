@@ -25,7 +25,7 @@
 #   alpha is a transparency option. Useful when lots of points are being plotted. Default is 1 (totally opaque).
 
 
-scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1)
+scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1, printRecast=FALSE)
 {
   # Check whether there are NAs in the value vector and the user did NOT specify to deal with them. Error results if both of these are true
   if (na.rm==FALSE & any(is.na(value)))
@@ -44,6 +44,10 @@ scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, map
   
   # Define the plot colors by calling the rgb() function. Divide the 3-column matrix result of color.fnc by 255 such that values remain between 0 and 1. Refill the storage vector only in the places where the value vector wasn't an NA.
   plot_colors[!is.na(value)] <- rgb(color_fnc(recast_value)/255, alpha=alpha)
+  
+  if (printRecast) {
+    print(recast_value)
+  }
   
   return (plot_colors)
 }

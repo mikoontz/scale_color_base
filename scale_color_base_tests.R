@@ -13,7 +13,7 @@
 # The function
 #--------
 
-scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1)
+scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1, printRecast=FALSE)
 {
   if (na.rm==FALSE & any(is.na(value)))
     stop("There are NAs in your vector. Using na.rm=TRUE will remove them for the mapping calculations, but add them back in in the final vector. Try that.")
@@ -26,6 +26,10 @@ scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, map
   
   plot_colors <- rep("NA", length(value))
   plot_colors[!is.na(value)] <- rgb(color_fnc(recast_value)/255, alpha=alpha)
+  
+  if (printRecast) {
+    print(recast_value)
+  }
   
   return (plot_colors)
 }
@@ -42,7 +46,7 @@ x <- 1:50
 y <- rep(1, 50)
 
 plot(x, y, pch=19, col=scale_color_base(x))
-value=x
+
 #-------
 # End default case
 #-------
@@ -96,4 +100,24 @@ plot(xy$x, xy$y, pch=19, col=scale_color_base(value, alpha=0.25, colors=c("blue"
 
 #-------
 # End alpha case
+#-------
+
+#-------
+# Start mapToRange testing
+#-------
+
+# Test 1
+# Give mapToRange the actual range of the data. This should give the same result as the default
+x <- 11:20
+y <- rep(1, 10)
+plot(x, y, pch=19, col=scale_color_base(x, colors=c("blue", "red"), mapToRange=range(x)))
+
+# Test 2
+# mapToRange= a left frame-shifted range
+x <- 11:20
+y <- rep(1, 10)
+plot(x, y, pch=19, col=scale_color_base(x, colors=c("blue", "red"), mapToRange=c(6, 15), printRecast=TRUE))
+
+#-------
+# End mapToRange testing
 #-------
