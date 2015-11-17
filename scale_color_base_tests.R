@@ -110,13 +110,31 @@ plot(xy$x, xy$y, pch=19, col=scale_color_base(value, alpha=0.25, colors=c("blue"
 # Give mapToRange the actual range of the data. This should give the same result as the default
 x <- 11:20
 y <- rep(1, 10)
-plot(x, y, pch=19, col=scale_color_base(x, colors=c("blue", "red"), mapToRange=range(x)))
+plot(x, y, pch=19, col=scale_color_base(x, colors=c("blue", "red"), mapToRange=range(x), printRecast=TRUE))
 
 # Test 2
 # mapToRange= a left frame-shifted range
 x <- 11:20
 y <- rep(1, 10)
 plot(x, y, pch=19, col=scale_color_base(x, colors=c("blue", "red"), mapToRange=c(6, 15), printRecast=TRUE))
+
+# Test 3
+# mapToRange= a right frame-shifted range
+x <- 11:20
+y <- rep(1, 10)
+plot(x, y, pch=19, col=scale_color_base(x, colors=c("blue", "red"), mapToRange=c(16, 25), printRecast=TRUE))
+
+# Test 4
+# new range is smaller than actual range
+x <- 11:20
+y <- rep(1, 10)
+plot(x, y, pch=19, col=scale_color_base(x, colors=c("blue", "red"), mapToRange=c(13, 18), printRecast=TRUE))
+
+# Test 5
+# new range is larger than actual range
+x <- 11:20
+y <- rep(1, 10)
+plot(x, y, pch=19, col=scale_color_base(x, colors=c("blue", "red"), mapToRange=c(8, 22), printRecast=TRUE))
 
 #-------
 # End mapToRange testing
