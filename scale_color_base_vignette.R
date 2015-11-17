@@ -24,6 +24,8 @@
 
 #   alpha is a transparency option. Useful when lots of points are being plotted. Default is 1 (totally opaque).
 
+# printRecast is a logical that specifies whether the recast values are to be printed to the console. This might be useful when determining how a particular numeric vector might be mapped to a new range (when also using mapToRange= argument)
+
 
 scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, mapToRange=range(value, na.rm=na.rm), alpha=1, printRecast=FALSE)
 {
@@ -44,7 +46,8 @@ scale_color_base <- function(value, colors=c("white", "black"), na.rm=FALSE, map
   
   # Define the plot colors by calling the rgb() function. Divide the 3-column matrix result of color.fnc by 255 such that values remain between 0 and 1. Refill the storage vector only in the places where the value vector wasn't an NA.
   plot_colors[!is.na(value)] <- rgb(color_fnc(recast_value)/255, alpha=alpha)
-  
+
+  # Print the recast_value if the printRecast argument is TRUE
   if (printRecast) {
     print(recast_value)
   }
