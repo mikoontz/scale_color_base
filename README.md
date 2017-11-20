@@ -1,8 +1,8 @@
 
 scale\_color\_base
 
-Map a custom color palette to a vector of values in R.
-======================================================
+Map a custom color palette to a vector of values in base R
+==========================================================
 
 ### Description
 
@@ -55,10 +55,19 @@ A character value of hex color values with a length equal to the length of value
 
 ### Examples
 
-At it's simplest, the `scale_color_base()` function can make a plot like this:
+The function returns the character vector of colors to match to each value in the `value=` vector argument.
 
 ``` r
 n <- 1:10
+scale_color_base(n)
+```
+
+    ##  [1] "#FFFFFFFF" "#E3E3E3FF" "#C6C6C6FF" "#AAAAAAFF" "#8E8E8EFF"
+    ##  [6] "#717171FF" "#555555FF" "#393939FF" "#1C1C1CFF" "#000000FF"
+
+At it's simplest, the `scale_color_base()` function can make a plot like this:
+
+``` r
 plot(n, pch = 19, col = scale_color_base(n))
 ```
 
@@ -76,11 +85,7 @@ More than two colors are possible. I highly recommend viridis color palettes fro
 
 ``` r
 plot(n, col = scale_color_base(n, colors = c("blue", "purple", "red")), pch = 19)
-
-library(viridis)
 ```
-
-    ## Loading required package: viridisLite
 
 ![](README_files/figure-markdown_github-ascii_identifiers/multiple_colors-1.png)
 
@@ -93,16 +98,19 @@ plot(n, col = scale_color_base(n, colors = viridis::viridis(5)), pch = 19)
 Fix the numeric range to map the values to. This is useful for comparing two vectors with the same color palette. When the colors get mapped to value vectors separately, they reflect the ranges of those separate vectors. But if we want to compare vectors, we need to use the same color palette standard. The `mapToRange=` argument helps us do that:
 
 ``` r
-par(mfrow = c(1,2))
+par(mfrow = c(1,2)) # Make the plots side-by-side
 x <- 1:50
 y <- seq(from = 1, to = 2, by = 0.05)
 xy <- expand.grid(x, y)
 names(xy) <- c("x", "y")
 
-# As we've done before...
+# As we've been doing, mapping they y column to a blue/red color palette...
 plot(x = xy$x, y = xy$y, pch = 19, col = scale_color_base((xy$y), colors = c("blue", "red")))
 
-# But the new variable y2 is 0.5 greater (50% of original range) than y. Mapping to its range will show the exact same plot as when the range was 1 to 2 as when the range is 1.5 to 2.5:
+# But the new variable y2 is 0.5 greater (50% of original range) than y. 
+# Mapping to its range will show the exact same plot as when the range
+# was 1 to 2 as when the range is 1.5 to 2.5, which doesn't 
+# appropriately demonstrate that they y-axes are different scales:
 xy$y2 <- xy$y + 0.5
 plot(x = xy$x, y = xy$y2, pch = 19, col = scale_color_base((xy$y2), colors = c("blue", "red")))
 ```
@@ -110,10 +118,13 @@ plot(x = xy$x, y = xy$y2, pch = 19, col = scale_color_base((xy$y2), colors = c("
 ![](README_files/figure-markdown_github-ascii_identifiers/mapToRange-1.png)
 
 ``` r
-# But if we want to compare the two ranges side by side, we want the color palette to reflect that the second range is greater than the first. So we can use the mapToRange to fix the range that we want to map the values of each vector to.
-par(mfrow=c(1,2))
+# But if we want to compare the two ranges side by side, we want the 
+# color palette to reflect that the second range is greater than the 
+# first. So we can use the mapToRange= argument to fix the range that 
+# we want to map the values of each vector to.
 
-# The range we want to map to is the min and max of the WHOLE range of the data, including both vectors.
+# The range we want to map to is the min and max of the WHOLE range 
+# of the data, including both vectors.
 new_range <- range(c(xy$y, xy$y2))
 new_range
 ```
@@ -121,6 +132,7 @@ new_range
     ## [1] 1.0 2.5
 
 ``` r
+par(mfrow=c(1,2)) # Make the plots side-by-side
 plot(x = xy$x, y = xy$y, pch = 19, col = scale_color_base((xy$y), colors = c("blue", "red"), mapToRange = new_range))
 
 plot(x = xy$x, y = xy$y2, pch = 19, col = scale_color_base((xy$y2), colors = c("blue", "red"), mapToRange = new_range))

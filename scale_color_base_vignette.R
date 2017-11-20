@@ -1,10 +1,10 @@
-### Title: Vignette of scale_color_base() function
+### Title: Raw R script of scale_color_base() function examples
 ###
 ### Author: Michael Koontz
 ### Email: mikoontz@gmail.com
 ###
 ### Date Created: 20151018
-### Last Modified: 20151110
+### Last Modified: 20171120
 ###
 ### Intention: Example uses of convenience function for base R that maps values to a continuous palette.
 
