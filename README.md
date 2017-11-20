@@ -1,12 +1,10 @@
----
-output: github_document
----
 
-scale_color_base
+scale\_color\_base
 
-# Map a custom color palette to a vector of values in R.
+Map a custom color palette to a vector of values in R.
+======================================================
 
-### Description 
+### Description
 
 This function uses base R functions to conveniently map a custom color palette to a vector of values. The function returns a character vector (the same length as the input vector of values) with hex strings representing a color. This vector is suitable for passing to the col= argument in a plot() function call.
 
@@ -14,7 +12,7 @@ Motivation: I've always had a hard time wrapping my head around the color ramps 
 
 ### Usage
 
-```{r usage, eval = FALSE}
+``` r
 ## Map vector of values to a white to black ramp spanning
 ## range of those values
 scale_color_base(value)
@@ -35,82 +33,66 @@ scale_color_base(value, colors = c("blue", "red"), alpha = 0.5)
 ## can be used to assess how a vector of values will relate to
 ## each other on the palette
 scale_color_base(value, mapToRange = c(-1, 1), printRecast = TRUE)
-
 ```
-### Arguments 
+
+### Arguments
 
 `value=` is a vector of numeric values
 
-`colors=` is a vector of colors that gets passed to colorRamp for interpolation. Can be a character vector of color names, a character vector of hex values, or numeric vector of positive integers. Lower values map to the first elements of the vector, higher values map to the last elements of the vector. Default is palette is white to black. 
+`colors=` is a vector of colors that gets passed to colorRamp for interpolation. Can be a character vector of color names, a character vector of hex values, or numeric vector of positive integers. Lower values map to the first elements of the vector, higher values map to the last elements of the vector. Default is palette is white to black.
 
 `na.rm=` gets passed to the range function via the mapToRange argument. Using na.rm=TRUE is required if you want the function to ignore NAs and map to non-NA values. Default is FALSE.
 
-`mapToRange=` is a 2-element numeric vector representing the minimum and maximum (in that order) fixed numeric range to map the values to.  Passing the result of any call to `range()` would be sufficient. Example: `range(c(vector1, vector2))` gets the overall range for both vectors. The default is the vector returned by calling the `range()` function on the supplied value= argument.
+`mapToRange=` is a 2-element numeric vector representing the minimum and maximum (in that order) fixed numeric range to map the values to. Passing the result of any call to `range()` would be sufficient. Example: `range(c(vector1, vector2))` gets the overall range for both vectors. The default is the vector returned by calling the `range()` function on the supplied value= argument.
 
 `alpha=` is a transparency option. Useful when lots of points are being plotted. Default is 1 (totally opaque).
 
 `printRecast=` is a logical that specifies whether the recast values are to be printed to the console. This might be useful when determining how a particular numeric vector might be mapped to a new range (when also using mapToRange= argument)
 
 ### Value Returned
+
 A character value of hex color values with a length equal to the length of value where each color value represents the mapping of each value to a continuous color palette.
 
 ### Examples
 
-```{r scale_color_base, echo = FALSE}
-scale_color_base <- function(value, colors = c("white", "black"), na.rm = FALSE, mapToRange = range(value, na.rm = na.rm), alpha = 1, printRecast = FALSE)
-{
-  # Check whether there are NAs in the value vector and the user did NOT specify to deal with them. Error results if both of these are true
-  if (na.rm == FALSE & any(is.na(value)))
-    stop("There are NAs in your vector. Using na.rm=TRUE will remove them for the mapping calculations, but add them back in in the final vector. Try that.")
-  
-  # Recasting subtracts the minimum from all elements of the value vector and divides by the maximum of the frame-shifed vector. Use na.rm=TRUE if there are NAs. The result is a vector with a length of length(value) of 0's and 1's. Values below the minimum value get a 0 and values above the maximum value get a 1.
-  recast_value <- (value[!is.na(value)] - mapToRange[1]) / (diff(mapToRange))
-  recast_value[recast_value < 0] <- 0
-  recast_value[recast_value > 1] <- 1
-  
-  # Use the colorRamp function to create a function that will parse values into a 3-column matrix of rgb fields. Specify the range that the colors should span (low to high)
-  color_fnc <- colorRamp(colors=colors)
-  
-  # Set up storage vector of plot colors starting with all NAs. The non-NA colors will be put into their appropriate position in the vector  
-  plot_colors <- rep("NA", length(value))
-  
-  # Define the plot colors by calling the rgb() function. Divide the 3-column matrix result of color.fnc by 255 such that values remain between 0 and 1. Refill the storage vector only in the places where the value vector wasn't an NA.
-  plot_colors[!is.na(value)] <- rgb(color_fnc(recast_value)/255, alpha=alpha)
-
-  # Print the recast_value if the printRecast argument is TRUE
-  if (printRecast) {
-    print(recast_value)
-  }
-  
-  return (plot_colors)
-}
-```
-
 At it's simplest, the `scale_color_base()` function can make a plot like this:
 
-```{r simplePlot}
+``` r
 n <- 1:10
 plot(n, pch = 19, col = scale_color_base(n))
 ```
 
+![](README_files/figure-markdown_github-ascii_identifiers/simplePlot-1.png)
+
 We can adjust the colors that the `value=` vector will be mapped to:
 
-```{r colors}
+``` r
 plot(n, col = scale_color_base(n, colors=c("blue", "red")), pch = 19)
 ```
 
+![](README_files/figure-markdown_github-ascii_identifiers/colors-1.png)
+
 More than two colors are possible. I highly recommend viridis color palettes from the `viridis` package.
 
-```{r multiple_colors}
+``` r
 plot(n, col = scale_color_base(n, colors = c("blue", "purple", "red")), pch = 19)
 
 library(viridis)
+```
+
+    ## Loading required package: viridisLite
+
+![](README_files/figure-markdown_github-ascii_identifiers/multiple_colors-1.png)
+
+``` r
 plot(n, col = scale_color_base(n, colors = viridis::viridis(5)), pch = 19)
 ```
 
+![](README_files/figure-markdown_github-ascii_identifiers/multiple_colors-2.png)
+
 Fix the numeric range to map the values to. This is useful for comparing two vectors with the same color palette. When the colors get mapped to value vectors separately, they reflect the ranges of those separate vectors. But if we want to compare vectors, we need to use the same color palette standard. The `mapToRange=` argument helps us do that:
 
-```{r mapToRange}
+``` r
 par(mfrow = c(1,2))
 x <- 1:50
 y <- seq(from = 1, to = 2, by = 0.05)
@@ -123,15 +105,25 @@ plot(x = xy$x, y = xy$y, pch = 19, col = scale_color_base((xy$y), colors = c("bl
 # But the new variable y2 is 0.5 greater (50% of original range) than y. Mapping to its range will show the exact same plot as when the range was 1 to 2 as when the range is 1.5 to 2.5:
 xy$y2 <- xy$y + 0.5
 plot(x = xy$x, y = xy$y2, pch = 19, col = scale_color_base((xy$y2), colors = c("blue", "red")))
+```
 
+![](README_files/figure-markdown_github-ascii_identifiers/mapToRange-1.png)
+
+``` r
 # But if we want to compare the two ranges side by side, we want the color palette to reflect that the second range is greater than the first. So we can use the mapToRange to fix the range that we want to map the values of each vector to.
 par(mfrow=c(1,2))
 
 # The range we want to map to is the min and max of the WHOLE range of the data, including both vectors.
 new_range <- range(c(xy$y, xy$y2))
 new_range
+```
 
+    ## [1] 1.0 2.5
+
+``` r
 plot(x = xy$x, y = xy$y, pch = 19, col = scale_color_base((xy$y), colors = c("blue", "red"), mapToRange = new_range))
 
 plot(x = xy$x, y = xy$y2, pch = 19, col = scale_color_base((xy$y2), colors = c("blue", "red"), mapToRange = new_range))
 ```
+
+![](README_files/figure-markdown_github-ascii_identifiers/mapToRange-2.png)
